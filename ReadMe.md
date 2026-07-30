@@ -1,4 +1,30 @@
-Luma is modding framework that facilitates improving graphics in DirectX 11 games.
+# Yakuza 6 Native DLAA
+
+This fork contains a production-oriented native DLAA implementation for
+**Yakuza 6: The Song of Life**, built on
+[Luma Framework](https://github.com/Filoppi/Luma-Framework/).
+
+- [Installation, verification, and known limitations](Documentation/Yakuza6-Native-DLAA.md)
+- [Changelog](Documentation/Yakuza6-Native-DLAA-Changelog.md)
+- Implementation: `Source/Graphics Analyzer/main.cpp`
+- Motion-vector shader:
+  `Shaders/Graphics Analyzer/Luma_Yakuza6_MotionVectors.hlsl`
+- Tested game settings: `Data/Yakuza6-graphics-dlaa.ini`
+
+Version 1.0.0 is deliberately **native-resolution DLAA only**. The in-game
+FXAA option is used as an injection point, but the original FXAA shader is
+replaced and no FXAA or SMAA pass is stacked on top. Experimental sub-native
+DLSS scaling code is disabled in the public build.
+
+The implementation injects temporal projection jitter into both camera-matrix
+layouts used by Yakuza 6 and reconstructs camera motion vectors from depth.
+NVIDIA preset K is selected for the native DLAA path.
+
+---
+
+# Luma Framework
+
+Luma is a modding framework that facilitates improving graphics in DirectX 11 games.
 It leverages the ReShade Addon system to add or modify rendering passes (and replace shaders (e.g. post processing)) through DirectX hooks.
 While most of the generic shaders code is focused on HDR output support, there's a lot more to it already (like DLSS support), and no limit to what it can do.
 Multiple games are already in the code, including a template project, and adding a new one is relatively easy.
