@@ -85,6 +85,11 @@ struct GraphicsAnalyzerDeviceData final : public GameDeviceData
    bool logged_upscale_depth_snapshot = false;
    std::atomic_bool logged_subnative_fxaa_bypass = false;
 
+   // Live comparison switch. When enabled, leave Yakuza's original FXAA draw
+   // untouched and stop injecting temporal camera jitter, so the user can
+   // compare native FXAA and DLAA in the same scene.
+   std::atomic_bool use_native_fxaa = false;
+
    // DLSS must execute on the immediate D3D11 context. Yakuza records its
    // final scaler on a deferred context, so split that command list at the
    // scaler and insert DLSS between the two halves during replay.
@@ -283,6 +288,7 @@ public:
       game_device_data.camera_buffer_cache[buffer] = camera;
 
       if (!SrActive(*device_data)
+         || game_device_data.use_native_fxaa.load()
          || !game_device_data.main_camera_buffers.contains(buffer)
          || device_data->output_resolution.x <= 0
          || device_data->output_resolution.y <= 0)
@@ -719,7 +725,8 @@ public:
             }
          }
 
-         if (SrActive(device_data))
+         if (SrActive(device_data)
+            && !game_device_data.use_native_fxaa.load())
             CaptureAndJitterMainCamera(native_device_context, device_data, game_device_data);
       }
 
@@ -1410,6 +1417,7 @@ public:
          && original_shader_hashes.Contains(shader_hashes_yakuza6_fxaa)
          && device_data.sr_type != SR::Type::None
          && !device_data.sr_suppressed
+         && !game_device_data.use_native_fxaa.load()
          && game_device_data.scene_depth)
       {
          com_ptr<ID3D11ShaderResourceView> source_srv;
@@ -1752,6 +1760,33 @@ public:
          game_device_data.native_scaled_scene_srv.reset();
          game_device_data.pending_upscale_output_resolution = {};
       }
+   }
+
+   void DrawImGuiSettings(DeviceData& device_data) override
+   {
+      auto& game_device_data = GetGameDeviceData(device_data);
+
+      ImGui::SeparatorText("Yakuza 6 DLAA comparison");
+      bool native_fxaa = game_device_data.use_native_fxaa.load();
+      if (ImGui::Checkbox("Use native FXAA (live A/B)", &native_fxaa))
+      {
+         game_device_data.use_native_fxaa.store(native_fxaa);
+
+         // Switching either direction invalidates temporal continuity. The
+         // next DLAA frame must start with a clean history.
+         device_data.force_reset_sr = true;
+         std::lock_guard camera_lock(game_device_data.camera_mutex);
+         game_device_data.jittered_camera_buffers.clear();
+      }
+      if (ImGui::IsItemHovered())
+      {
+         ImGui::SetTooltip(
+            "On: original Yakuza FXAA with no projection jitter.\n"
+            "Off: native-resolution DLAA. Allow DLAA a few seconds to rebuild history.");
+      }
+      ImGui::Text(
+         "Current output: %s",
+         native_fxaa ? "Yakuza native FXAA" : "NVIDIA DLAA");
    }
 
    void PrintImGuiAbout() override

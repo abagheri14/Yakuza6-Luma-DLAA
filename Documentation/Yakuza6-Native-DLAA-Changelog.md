@@ -8,6 +8,7 @@
   creating the DLAA feature.
 - Made Luma's visible DLSS preset selector apply to Yakuza 6; preset K remains
   the tested default.
+- Retained the native FXAA live A/B comparison switch in the public build.
 - Documented the remaining fast-motion breakup on very thin geometry more
   accurately after extensive in-game testing.
 - Kept experimental wire expansion, material replacement, coverage dilation,

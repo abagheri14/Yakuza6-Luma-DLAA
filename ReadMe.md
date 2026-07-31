@@ -21,6 +21,10 @@ layouts used by Yakuza 6 and reconstructs camera motion vectors from depth.
 NVIDIA preset K is selected by default for the native DLAA path, while Luma's
 visible DLSS preset selector remains functional.
 
+The Settings tab includes a `Use native FXAA (live A/B)` switch for direct
+same-scene comparisons. Turning it off restores DLAA and resets its temporal
+history.
+
 ---
 
 # Luma Framework

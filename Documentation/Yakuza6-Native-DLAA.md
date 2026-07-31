@@ -10,6 +10,11 @@ after DLAA.
 This release is deliberately DLAA-only. Experimental sub-native DLSS scaling
 modes are not included.
 
+The Settings tab includes a `Use native FXAA (live A/B)` switch. Enable it to
+restore the game's original FXAA without projection jitter for a direct
+same-scene comparison. Disable it to return to DLAA; allow a few seconds for
+DLAA to rebuild its temporal history.
+
 ## Requirements
 
 - Yakuza 6: The Song of Life for Windows (Steam version tested)
