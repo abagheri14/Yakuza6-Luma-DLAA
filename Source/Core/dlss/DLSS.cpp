@@ -84,9 +84,13 @@ namespace NGX
 
 			NVSDK_NGX_Handle* feature = nullptr;
 
+			const bool motion_vectors_are_low_resolution =
+				settings_data.render_width < settings_data.output_width
+				|| settings_data.render_height < settings_data.output_height;
+
 			int create_flags = 
-				// Always needed unless MVs are in output (upscaled) resolution
-				NVSDK_NGX_DLSS_Feature_Flags_MVLowRes
+				// Needed only when MVs are below output (upscaled) resolution
+				(motion_vectors_are_low_resolution ? NVSDK_NGX_DLSS_Feature_Flags_MVLowRes : 0)
 				// DLSS expects the depth to be the device/HW one (1 being near, not 1 being the camera (linear depth)), CryEngine (Prey) and other games use inverted depth because it's better for quality.
 				// Depth is always meant to be jittered with DLSS.
 				| (settings_data.inverted_depth ? NVSDK_NGX_DLSS_Feature_Flags_DepthInverted : 0)

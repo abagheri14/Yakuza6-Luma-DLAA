@@ -1,6 +1,6 @@
 # Yakuza 6 Native DLAA
 
-Version 1.0.0
+Version 1.0.1
 
 This ReShade add-on replaces Yakuza 6's FXAA pass with NVIDIA DLAA at the
 game's native rendering resolution. FXAA is used only as a reliable injection
@@ -68,8 +68,11 @@ soften the DLAA result without fixing temporal aliasing.
 
 ## Known limitations
 
-- Very thin, high-contrast subpixel geometry such as distant overhead wires can
-  retain a small amount of temporal stair-stepping.
+- Very thin, high-contrast geometry such as distant overhead wires can still
+  exhibit severe breakup or shimmer during fast camera motion. Extensive
+  testing found this to originate before the DLAA resolve; the add-on improves
+  overall image stability but cannot reconstruct geometry missing from the
+  current frame.
 - Yakuza 6 does not expose an object-motion-vector target at this point in its
   renderer. The add-on reconstructs camera motion from depth, so independently
   animated objects may not be as temporally stable as in games with native

@@ -11,14 +11,15 @@ This fork contains a production-oriented native DLAA implementation for
   `Shaders/Graphics Analyzer/Luma_Yakuza6_MotionVectors.hlsl`
 - Tested game settings: `Data/Yakuza6-graphics-dlaa.ini`
 
-Version 1.0.0 is deliberately **native-resolution DLAA only**. The in-game
+Version 1.0.1 is deliberately **native-resolution DLAA only**. The in-game
 FXAA option is used as an injection point, but the original FXAA shader is
 replaced and no FXAA or SMAA pass is stacked on top. Experimental sub-native
 DLSS scaling code is disabled in the public build.
 
 The implementation injects temporal projection jitter into both camera-matrix
 layouts used by Yakuza 6 and reconstructs camera motion vectors from depth.
-NVIDIA preset K is selected for the native DLAA path.
+NVIDIA preset K is selected by default for the native DLAA path, while Luma's
+visible DLSS preset selector remains functional.
 
 ---
 

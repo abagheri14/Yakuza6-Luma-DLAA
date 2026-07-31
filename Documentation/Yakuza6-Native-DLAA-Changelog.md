@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.1
+
+- Fixed packaged precompiled native shaders not always being recognized by the
+  Luma native-shader loader.
+- Stopped marking native-resolution motion vectors as low-resolution when
+  creating the DLAA feature.
+- Made Luma's visible DLSS preset selector apply to Yakuza 6; preset K remains
+  the tested default.
+- Documented the remaining fast-motion breakup on very thin geometry more
+  accurately after extensive in-game testing.
+- Kept experimental wire expansion, material replacement, coverage dilation,
+  history-bias, and postfilter diagnostics out of the public build because they
+  did not provide a meaningful improvement.
+
 ## 1.0.0
 
 - Added native-resolution NVIDIA DLAA at the game's FXAA injection point.

@@ -1672,11 +1672,9 @@ public:
                   settings_data.mvs_jittered = false;
                   settings_data.mvs_x_scale = -static_cast<float>(resolution.x);
                   settings_data.mvs_y_scale = -static_cast<float>(resolution.y);
-                  // NGX preset K is the recommended high-quality transformer
-                  // model for DLAA. The global preset was M, which NVIDIA
-                  // defines as the Performance-mode default and leaves more
-                  // residual aliasing at native resolution.
-                  settings_data.render_preset = 11u;
+                  // Honor Luma's visible DLSS preset selector. OnInit chooses
+                  // preset K as the tested default for native DLAA.
+                  settings_data.render_preset = dlss_render_preset;
                   settings_data.auto_exposure = true;
 
                   bool dlaa_succeeded = false;

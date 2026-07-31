@@ -1468,6 +1468,28 @@ namespace
          const char* hash_sample = "0x12345678";
          const auto sm_length = strlen("xs_n_n"); // Shader Model min length
 
+         // Native shaders may be distributed as precompiled CSOs only. These
+         // need the same shifted native-shader namespace used by HLSL sources,
+         // otherwise CreateShaderObject cannot find the registered shader.
+         if (is_cso && !is_global)
+         {
+            for (const auto& native_shader_definition :
+               native_shaders_definitions)
+            {
+               const std::string native_hash =
+                  "0x" + Shader::Hash_NumToStr(
+                     native_shader_definition.first);
+               if (filename_no_extension_string.starts_with(
+                      native_shader_definition.second.file_name)
+                  && filename_no_extension_string.find(native_hash)
+                     != std::string::npos)
+               {
+                  is_luma_native = true;
+                  break;
+               }
+            }
+         }
+
          if (is_hlsl)
          {
             const bool has_hash = filename_no_extension_string.find("0x") != std::string::npos;
